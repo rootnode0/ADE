@@ -85,8 +85,6 @@ ollama pull qwen2.5-coder:7b
 
 # 🛠 Setup
 
----
-
 ## 🐧 Linux / macOS
 
 ```bash
@@ -105,18 +103,16 @@ cd ADE
 .\setup.ps1
 ```
 
-> 💡 Recommended: Use **WSL (Windows Subsystem for Linux)** for full compatibility.
+> 💡 Recommended: Use **WSL** for full compatibility.
 
 ---
 
 # 🚀 Usage
 
----
-
 ## 📦 Create Project
 
 ```bash
-newproj my_api                # default (django)
+newproj my_api
 newproj my_api --type django
 ```
 
@@ -146,6 +142,22 @@ runai my_api "create Order API in orders app"
 ```bash
 runai my_api chat
 ```
+
+---
+
+## 🧠 Advanced Usage (Optional)
+
+```bash
+runai my_api "fix failing tests in core app"
+runai my_api "optimize serializers without changing API response"
+runai my_api "add authentication in users app"
+```
+
+### Tips
+
+- Mention target app (`core`, `orders`, etc.)
+- Use clear intent: _create_, _fix_, _optimize_
+- Avoid vague instructions like “improve everything”
 
 ---
 

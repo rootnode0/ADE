@@ -25,11 +25,13 @@ ai-dev-env/
 └── router/
 ```
 
+---
+
 # 📁 Projects Directory
 
 ## Location
 
-```text
+```
 ADE/projects/
 ```
 
@@ -37,11 +39,11 @@ ADE/projects/
 
 ## Purpose
 
-The `projects/` directory stores all **generated and managed applications**.
+Stores all **generated and managed applications**.
 
 Each project is:
 
-```text
+```
 ✔ isolated
 ✔ self-contained
 ✔ AI-managed
@@ -51,7 +53,7 @@ Each project is:
 
 ## Structure Example
 
-```text
+```
 projects/
 └── my_api/
     ├── config/
@@ -65,66 +67,37 @@ projects/
 
 ---
 
-## Key Characteristics
+## Behavior
 
-- Created via:
-
-  ```bash
-  newproj <project_name>
-  ```
-
-- Contains:
-  - Django project
-  - virtual environment (`.venv`)
-  - test suite
-  - AI-generated code
-
----
-
-## Behavior in ADE
-
-```text
-runai → operates ONLY inside a selected project
+```
+runai → operates ONLY inside selected project
 ```
 
 - No cross-project interaction
-- Each project has independent lifecycle
+- Independent lifecycle per project
 
 ---
 
 ## Git Behavior
 
-```text
-projects/ is ignored by Git
+```
+projects/ is ignored
 ```
 
-Reasons:
+Reason:
 
-- contains generated code
-- includes virtual environments
-- includes local databases
-- user-specific data
+- generated code
+- virtual environments
+- local state
 
 ---
 
 ## Safety Rules
 
-```text
-✔ runai MUST NOT create project implicitly
-✔ project must exist before execution
-✔ no modification outside selected project
 ```
-
----
-
-## Design Intent
-
-The `projects/` folder ensures:
-
-```text
-✔ isolation of generated code
-✔ reproducible workflows
-✔ clean repository (no generated files tracked)
+✔ project must exist before runai
+✔ no modification outside project
+✔ no implicit project creation
 ```
 
 ---
@@ -140,8 +113,8 @@ runai → run_aider.sh → aider → code → pytest → fix loop
 # 📂 File Selection
 
 - global_rules.md
-- project Python files
-- detected Django apps
+- project source files
+- detected apps
 - root configs
 - tests
 
@@ -157,7 +130,13 @@ run → test → fail → fix → repeat (max 3)
 
 # 🔐 Permissions
 
-Controlled via env:
+Controlled via:
+
+```
+env.sh
+```
+
+Example:
 
 ```
 ADE_ALLOW_TEST_GEN
@@ -191,6 +170,12 @@ Handled by:
 scripts/create_project.sh
 ```
 
+Supports:
+
+```
+newproj my_api --type django
+```
+
 ---
 
 # 🔀 Router (Optional)
@@ -221,4 +206,4 @@ Used for multi-model routing.
 
 # 🧠 Philosophy
 
-LLM output is constrained, validated, and test-driven.
+LLM output is **constrained, validated, and test-driven** — not blindly trusted.
