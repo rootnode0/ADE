@@ -1,68 +1,66 @@
 # 🚀 ADE (AI Dev Environment)
 
-A **controlled, test-driven AI development system** for building reliable applications with local LLMs.
+Build apps with AI — **but safely**
+
+> Generate → Test → Fix → Stabilize
 
 ---
 
-# ⚡ What Makes ADE Different?
+## ⚡ What is ADE?
 
-| Tool              | Behavior           |
-| ----------------- | ------------------ |
-| Copilot / ChatGPT | Suggest code       |
-| ADE               | Build → Test → Fix |
+ADE is a tool where AI:
 
-ADE ensures:
+- writes code
+- runs tests
+- fixes errors automatically
 
-- deterministic changes
-- scoped edits only
-- automated test validation
-- safe iterative improvements
+👉 Like a **junior developer that keeps fixing its own code**
 
 ---
 
-# 🧠 Stack
+# 🧠 Before You Start
 
-- Aider → code editing engine
-- Ollama → local LLM runtime
-- Bash → orchestration
+ADE needs:
+
+- Python (3.10+)
+- Git
+- Ollama (for AI)
+- Aider (for code editing)
 
 ---
 
-# 🧪 Quick Example
+# 🐧 Ubuntu / Linux Setup
+
+## 1. Install system dependencies
 
 ```bash
-newproj demo_api --type django
-runai demo_api "create Item API"
+sudo apt update
+sudo apt install python3 python3-pip git -y
 ```
-
-Result:
-
-- API generated
-- tests created
-- tests passing ✅
 
 ---
 
-# 📦 Requirements
-
-- Python 3.10+
-- Git
-- Ollama
-- Aider
-
-Install:
+## 2. Install Aider
 
 ```bash
 pip install aider-chat
 ```
 
-Install Ollama:
+---
 
-👉 https://ollama.com
+## 3. Install Ollama
+
+Download from: https://ollama.com
+
+Then start it:
+
+```bash
+ollama serve
+```
 
 ---
 
-# 🧠 Model Setup
+## 4. Download a model
 
 ```bash
 ollama pull deepseek-coder:6.7b
@@ -70,31 +68,145 @@ ollama pull deepseek-coder:6.7b
 
 ---
 
-# 🛠 Setup
-
-## Linux / macOS
+## 5. Clone ADE
 
 ```bash
-git clone https://github.com/albin732/ADE.git
+git clone git@github.com:rootnode0/ADE.git
 cd ADE
-./setup.sh
 ```
-
-## Windows
-
-```powershell
-git clone https://github.com/albin732/ADE.git
-cd ADE
-.\setup.ps1
-```
-
-👉 Recommended: use WSL
 
 ---
 
-# 🚀 Usage
+## 6. Run setup
 
-## Create Project
+```bash
+./setup.sh
+```
+
+---
+
+## 7. Load environment
+
+```bash
+source ai-dev-env/config/env.sh
+```
+
+---
+
+# 🪟 Windows Setup (Recommended: WSL)
+
+👉 ADE works best inside Linux environment
+
+---
+
+## 1. Install WSL
+
+Open PowerShell:
+
+```powershell
+wsl --install
+```
+
+Restart your PC.
+
+---
+
+## 2. Open Ubuntu (WSL)
+
+Then run:
+
+```bash
+sudo apt update
+sudo apt install python3 python3-pip git -y
+```
+
+---
+
+## 3. Install Aider
+
+```bash
+pip install aider-chat
+```
+
+---
+
+## 4. Install Ollama (Windows)
+
+Download: https://ollama.com/download
+
+Then in WSL:
+
+```bash
+ollama serve
+```
+
+---
+
+## 5. Setup ADE
+
+```bash
+git clone git@github.com:rootnode0/ADE.git
+cd ADE
+./setup.sh
+source ai-dev-env/config/env.sh
+```
+
+---
+
+## ⚠️ Important for Windows
+
+- Always use **WSL terminal**
+- Do NOT use PowerShell for ADE commands
+- Keep projects inside WSL filesystem
+
+---
+
+# 🧪 First Run (IMPORTANT)
+
+Before running ADE, make sure:
+
+```bash
+ollama serve
+```
+
+and:
+
+```bash
+source ai-dev-env/config/env.sh
+```
+
+---
+
+## Now try:
+
+```bash
+newproj demo_api --type django
+runai demo_api "create Item API"
+```
+
+---
+
+## ✅ Expected result
+
+- Django API created
+- Tests generated
+- Errors fixed automatically
+
+---
+
+## ❗ If it fails
+
+Check:
+
+- Ollama is running
+- Model is installed
+- env.sh is loaded
+
+---
+
+# 🚀 Basic Usage
+
+### Create project
 
 ```bash
 newproj my_api --type django
@@ -102,7 +214,7 @@ newproj my_api --type django
 
 ---
 
-## Run AI
+### Run AI
 
 ```bash
 runai my_api
@@ -110,7 +222,7 @@ runai my_api
 
 ---
 
-## Run Task
+### Give task
 
 ```bash
 runai my_api "create Order API in orders app"
@@ -118,39 +230,27 @@ runai my_api "create Order API in orders app"
 
 ---
 
-## Interactive Mode
+# 🧠 How it works
 
-```bash
-runai my_api chat
+```text
+runai → AI edits code → tests run → AI fixes → repeat
 ```
 
 ---
 
-# 🧪 Run Tests
+# ⚠️ Tips (IMPORTANT)
 
-```bash
-cd projects/my_api
-source .venv/bin/activate
-pytest -v
-```
+✔ Good:
 
----
+- “create Order API in orders app”
+- “fix failing tests in core app”
 
-# 🧠 Execution Flow
+❌ Bad:
 
-```
-runai → aider → code → pytest → fix loop
-```
+- “build full system”
+- “improve everything”
 
----
-
-# 🔐 Behavior Control
-
-Configured via:
-
-```
-ai-dev-env/config/env.sh
-```
+👉 Keep tasks small
 
 ---
 
@@ -159,65 +259,22 @@ ai-dev-env/config/env.sh
 ```
 ADE/
 ├── ai-dev-env/
-├── projects/        # generated apps (ignored)
-├── setup.sh
-├── setup.ps1
+├── projects/
 ```
 
 ---
 
-# ⚠️ Important Notes
+# 💡 Summary
 
-- ADE uses local LLMs → output depends on model quality
-- Always use scoped prompts
-- Avoid large multi-step instructions
+ADE is:
 
----
-
-# 🛠 Troubleshooting
-
-### Ollama not running
-
-```bash
-ollama serve
-```
+> AI that writes code
+> and keeps fixing it until tests pass
 
 ---
 
-### Commands not working
+# 👨‍💻 Author
 
-```bash
-source ~/.bashrc
-```
+albingeo
 
 ---
-
-### Repeated failures
-
-```bash
-runai my_api chat
-```
-
----
-
-# 📚 Internal Docs
-
-```
-ai-dev-env/README.md
-```
-
----
-
-# 🔮 Roadmap
-
-- precision mode
-- multi-framework support
-- multi-agent system
-- routing optimization
-
----
-
-# 💡 Philosophy
-
-> ADE is not AI coding.
-> It is **controlled AI-assisted development** focused on reliability.
