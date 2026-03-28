@@ -1,28 +1,28 @@
 # ⚙️ ADE Internal Documentation
 
-> Technical overview of ADE internals.
-> See root README for usage.
+> Technical reference for ADE internals
+> See root README for usage and onboarding
 
 ---
 
 # 🧠 System Overview
 
-ADE is a script-driven orchestration system combining:
+ADE is a **controlled AI orchestration system** combining:
 
-- Aider (editing engine)
-- Ollama (LLM backend)
-- Bash scripts (control layer)
+- Aider → structured code editing engine
+- Ollama → local LLM backend
+- Bash scripts → execution & control layer
 
 ---
 
-# 🧱 Components
+# 🧱 Core Components
 
 ```
 ai-dev-env/
-├── config/
-├── memory/
-├── scripts/
-└── router/
+├── config/      # environment + permissions
+├── memory/      # rules + constraints
+├── scripts/     # execution logic
+└── router/      # optional model routing
 ```
 
 ---
@@ -35,30 +35,25 @@ ai-dev-env/
 ADE/projects/
 ```
 
----
-
 ## Purpose
 
-Stores all **generated and managed applications**.
+Stores all **AI-managed applications**
 
 Each project is:
 
-```
-✔ isolated
-✔ self-contained
-✔ AI-managed
-```
+- isolated
+- self-contained
+- independently executable
 
 ---
 
-## Structure Example
+## Example Structure
 
 ```
 projects/
 └── my_api/
     ├── config/
     ├── core/
-    ├── orders/
     ├── tests/
     ├── manage.py
     ├── requirements.txt
@@ -73,70 +68,78 @@ projects/
 runai → operates ONLY inside selected project
 ```
 
-- No cross-project interaction
-- Independent lifecycle per project
+- no cross-project access
+- no global mutations
 
 ---
 
-## Git Behavior
+## ⚠️ Git Behavior
 
 ```
-projects/ is ignored
+projects/ is ignored by default
 ```
 
 Reason:
 
 - generated code
-- virtual environments
-- local state
+- local environments
+- non-deterministic outputs
 
----
-
-## Safety Rules
-
-```
-✔ project must exist before runai
-✔ no modification outside project
-✔ no implicit project creation
-```
+👉 If treating a project as production code, manage Git inside that project separately.
 
 ---
 
 # ⚙️ Execution Flow
 
 ```
-runai → run_aider.sh → aider → code → pytest → fix loop
+runai
+  ↓
+run_aider.sh
+  ↓
+aider (LLM edit)
+  ↓
+code changes
+  ↓
+pytest
+  ↓
+fix loop (max 3)
 ```
 
 ---
 
-# 📂 File Selection
+# 📂 Context Selection
+
+Aider receives:
 
 - global_rules.md
 - project source files
-- detected apps
-- root configs
-- tests
+- detected Django apps
+- configs + tests
 
 ---
 
 # 🔁 Smart Loop
 
 ```
-run → test → fail → fix → repeat (max 3)
+run → test → fail → fix → repeat
 ```
+
+Constraints:
+
+- max 3 iterations
+- scoped edits only
 
 ---
 
-# 🔐 Permissions
+# 🔐 Permissions System
 
 Controlled via:
 
 ```
-env.sh
+config/env.sh
 ```
 
-Example:
+Examples:
 
 ```
 ADE_ALLOW_TEST_GEN
@@ -148,8 +151,6 @@ ADE_ALLOW_BUG_FIX
 
 # 🧠 Rules Engine
 
-File:
-
 ```
 memory/global_rules.md
 ```
@@ -157,8 +158,8 @@ memory/global_rules.md
 Prevents:
 
 - duplicate AppConfig
-- duplicate models
-- broken URLs
+- invalid Django structure
+- unsafe modifications
 
 ---
 
@@ -170,7 +171,7 @@ Handled by:
 scripts/create_project.sh
 ```
 
-Supports:
+Example:
 
 ```
 newproj my_api --type django
@@ -184,26 +185,34 @@ newproj my_api --type django
 scripts/start_router.sh
 ```
 
-Used for multi-model routing.
+Used for:
+
+- multi-model routing
+- cost/performance optimization
 
 ---
 
-# ⚠️ Constraints
+# ⚠️ System Constraints
 
 - no global rewrites
 - no hardcoded paths
 - no cross-app edits
+- no uncontrolled file creation
 
 ---
 
-# 🔮 Future
+# 🔮 Roadmap
 
-- precision mode
-- AST validation
-- multi-agent system
+- precision edit mode
+- AST-based validation
+- multi-agent orchestration
 
 ---
 
 # 🧠 Philosophy
 
-LLM output is **constrained, validated, and test-driven** — not blindly trusted.
+LLM output is:
+
+> constrained → validated → tested
+
+Not blindly executed.
