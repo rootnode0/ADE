@@ -18,7 +18,7 @@ ADE is a **controlled AI orchestration system** combining:
 # 🧱 Core Components
 
 ```
-ai-dev-env/
+ai_dev_env/
 ├── config/      # environment + permissions
 ├── memory/      # rules + constraints
 ├── scripts/     # execution logic

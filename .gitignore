@@ -1,7 +1,7 @@
 # =========================
 # ENV / SECRETS
 # =========================
-ai-dev-env/config/env.sh
+ai_dev_env/config/env.sh
 .env
 .env.*
 *.env

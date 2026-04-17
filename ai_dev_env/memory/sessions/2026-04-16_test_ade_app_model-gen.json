@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-04-16T17:01:28.408652",
+  "project": "test_ade_app",
+  "plan": {
+    "task_type": "model-gen",
+    "skill": "django-model-gen",
+    "target_files": [
+      "core/models.py"
+    ],
+    "context_files": [],
+    "class_name": "Category",
+    "app_name": "core",
+    "reasoning": "Fallback plan generated due to LLM parsing error."
+  },
+  "operations_count": 1,
+  "success": true
+}

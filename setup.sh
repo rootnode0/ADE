@@ -22,8 +22,8 @@ touch "$ADE_BASE/projects/.keep"
 # =========================
 # ⚙️ Setup env.sh
 # =========================
-ENV_FILE="$ADE_BASE/ai-dev-env/config/env.sh"
-SAMPLE_FILE="$ADE_BASE/ai-dev-env/config/env.sample.sh"
+ENV_FILE="$ADE_BASE/ai_dev_env/config/env.sh"
+SAMPLE_FILE="$ADE_BASE/ai_dev_env/config/env.sample.sh"
 
 if [ ! -f "$ENV_FILE" ]; then
   cp "$SAMPLE_FILE" "$ENV_FILE"
@@ -112,16 +112,16 @@ cat <<EOF >> "$BASHRC"
 # ⚠️ RUN setup.sh TO UPDATE
 
 export ADE_BASE="$ADE_BASE"
-source "\$ADE_BASE/ai-dev-env/config/env.sh"
+source "\$ADE_BASE/ai_dev_env/config/env.sh"
 
 runai() {
   source "\$ADE_BASE/.venv/bin/activate"
-  "\$ADE_BASE/ai-dev-env/scripts/run_aider.sh" "\$@"
+  "\$ADE_BASE/ai_dev_env/scripts/runai.sh" "\$@"
 }
 
 newproj() {
   source "\$ADE_BASE/.venv/bin/activate"
-  "\$ADE_BASE/ai-dev-env/scripts/create_project.sh" "\$@"
+  "\$ADE_BASE/ai_dev_env/scripts/newproj.sh" "\$@"
 }
 # <<< ADE END <<<
 EOF

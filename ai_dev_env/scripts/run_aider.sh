@@ -21,7 +21,7 @@ step() {
 }
 
 # ================= ENV =================
-source "$ADE_BASE/ai-dev-env/config/env.sh"
+source "$ADE_BASE/ai_dev_env/config/env.sh"
 
 INPUT="$1"
 TASK="${@:2}"

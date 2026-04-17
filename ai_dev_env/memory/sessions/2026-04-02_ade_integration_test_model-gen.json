@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-04-02T08:26:58.666190",
+  "project": "ade_integration_test",
+  "plan": {
+    "task_type": "model-gen",
+    "skill": "django-model-gen",
+    "target_files": [
+      "core/models.py"
+    ],
+    "context_files": [
+      "config/settings.py"
+    ],
+    "class_name": "Profile",
+    "app_name": "core",
+    "reasoning": "The migration file is generated to create the Profile model in the core application, ensuring the database schema is updated to include the model and its associated fields."
+  },
+  "operations_count": 1,
+  "success": true
+}

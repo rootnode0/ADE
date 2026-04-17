@@ -117,7 +117,7 @@ export ADE_BASE="$HOME/hub/00_own/ADE"
 export ADE_PROJECTS="$ADE_BASE/projects"
 
 # Scripts directory
-export ADE_SCRIPTS="$ADE_BASE/ai-dev-env/scripts"
+export ADE_SCRIPTS="$ADE_BASE/ai_dev_env/scripts"
 
 
 # =========================================================

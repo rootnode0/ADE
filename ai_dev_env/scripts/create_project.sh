@@ -8,7 +8,7 @@ if [ -z "$ADE_BASE" ]; then
   exit 1
 fi
 
-ENV_FILE="$ADE_BASE/ai-dev-env/config/env.sh"
+ENV_FILE="$ADE_BASE/ai_dev_env/config/env.sh"
 
 if [ -f "$ENV_FILE" ]; then
   source "$ENV_FILE"
@@ -108,8 +108,8 @@ esac
 # =========================
 # 🧠 COPY GLOBAL RULES (CRITICAL FIX)
 # =========================
-if [ -f "$ADE_BASE/ai-dev-env/memory/global_rules.md" ]; then
-  cp "$ADE_BASE/ai-dev-env/memory/global_rules.md" .ai-rules.md
+if [ -f "$ADE_BASE/ai_dev_env/memory/global_rules.md" ]; then
+  cp "$ADE_BASE/ai_dev_env/memory/global_rules.md" .ai-rules.md
 fi
 
 # =========================

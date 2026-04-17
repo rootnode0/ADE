@@ -9,7 +9,7 @@ if [ -z "$ADE_BASE" ]; then
   exit 1
 fi
 
-source "$ADE_BASE/ai-dev-env/config/env.sh"
+source "$ADE_BASE/ai_dev_env/config/env.sh"
 
 # =========================
 # ✅ VALIDATION
@@ -19,7 +19,7 @@ if [ -z "$ADE_BASE" ]; then
   exit 1
 fi
 
-CONFIG_FILE="$ADE_BASE/ai-dev-env/router/litellm_config.yaml"
+CONFIG_FILE="$ADE_BASE/ai_dev_env/router/litellm_config.yaml"
 
 if [ ! -f "$CONFIG_FILE" ]; then
   echo "❌ LiteLLM config not found: $CONFIG_FILE"

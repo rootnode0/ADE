@@ -16,8 +16,8 @@ New-Item -ItemType File -Force -Path "$ADE_BASE\projects\.keep" | Out-Null
 # =========================
 # Setup env
 # =========================
-$envFile = "$ADE_BASE\ai-dev-env\config\env.sh"
-$sampleFile = "$ADE_BASE\ai-dev-env\config\env.sample.sh"
+$envFile = "$ADE_BASE\ai_dev_env\config\env.sh"
+$sampleFile = "$ADE_BASE\ai_dev_env\config\env.sample.sh"
 
 if (!(Test-Path $envFile)) {
     Copy-Item $sampleFile $envFile
@@ -114,12 +114,12 @@ Add-Content $profilePath @"
 
 function runai {
     & "$env:ADE_BASE\venv\Scripts\activate.ps1"
-    bash "$env:ADE_BASE/ai-dev-env/scripts/run_aider.sh" @args
+    bash "$env:ADE_BASE/ai_dev_env/scripts/run_aider.sh" @args
 }
 
 function newproj {
     & "$env:ADE_BASE\venv\Scripts\activate.ps1"
-    bash "$env:ADE_BASE/ai-dev-env/scripts/create_project.sh" @args
+    bash "$env:ADE_BASE/ai_dev_env/scripts/create_project.sh" @args
 }
 # <<< ADE END <<<
 "@
