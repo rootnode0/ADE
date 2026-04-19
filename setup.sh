@@ -114,14 +114,18 @@ cat <<EOF >> "$BASHRC"
 export ADE_BASE="$ADE_BASE"
 source "\$ADE_BASE/ai_dev_env/config/env.sh"
 
-runai() {
+ade() {
   source "\$ADE_BASE/.venv/bin/activate"
-  "\$ADE_BASE/ai_dev_env/scripts/runai.sh" "\$@"
+  export PYTHONPATH="\$ADE_BASE:\$PYTHONPATH"
+  python "\$ADE_BASE/ai_dev_env/cli.py" "\$@"
+}
+
+runai() {
+  ade "\$@"
 }
 
 newproj() {
-  source "\$ADE_BASE/.venv/bin/activate"
-  "\$ADE_BASE/ai_dev_env/scripts/newproj.sh" "\$@"
+  ade create "\$@"
 }
 # <<< ADE END <<<
 EOF

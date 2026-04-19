@@ -38,6 +38,18 @@ class ProjectValidator:
         env = os.environ.copy()
         current_pp = env.get("PYTHONPATH", "")
         env["PYTHONPATH"] = f"{self.project_path}:{current_pp}" if current_pp else self.project_path
+        
+        # Determine DJANGO_SETTINGS_MODULE
+        # Usually it's in a 'config' or 'project_name' folder. 
+        # We'll look for settings.py and derive the module path.
+        for root, dirs, files in os.walk(self.project_path):
+            if "settings.py" in files:
+                rel_dir = os.path.relpath(root, self.project_path)
+                if rel_dir == ".":
+                    env["DJANGO_SETTINGS_MODULE"] = "settings"
+                else:
+                    env["DJANGO_SETTINGS_MODULE"] = f"{rel_dir.replace(os.sep, '.')}.settings"
+                break
 
         if os.path.exists(os.path.join(self.project_path, ".venv")):
             env["VIRTUAL_ENV"] = os.path.join(self.project_path, ".venv")
@@ -71,14 +83,58 @@ class ProjectValidator:
         # --- STAGE 2: Django Check ---
         stdout, stderr, code = self._run_in_project(["python", "manage.py", "check"], timeout=20)
         if code != 0:
-            combined = stderr + stdout
-            return ValidationResult(passed=False, stage_reached="structure", errors=[combined], raw_output=combined, fix_signal=f"Django check failed: {combined[:200]}")
+            combined = (stderr + "\n" + stdout).strip()
+            # Clean up traceback to show the most relevant part
+            summary = combined.split('\n')[-5:]
+            return ValidationResult(
+                passed=False, 
+                stage_reached="structure", 
+                errors=[combined], 
+                raw_output=combined, 
+                fix_signal=f"Django check failed:\n{combined}"
+            )
 
-        # --- STAGE 3: Pytest (Exit 5 = no tests collected, which is acceptable) ---
+        # --- STAGE 3: Pytest ---
+        # Exit codes: 0=Success, 1=Tests failed, 2=Interrupted, 5=No tests collected
         stdout, stderr, code = self._run_in_project(["python", "-m", "pytest", ".", "-q", "--tb=short"], timeout=60)
-        if code not in [0, 5]:  # exit 4 = internal error, NOT "no tests"
+        
+        # If the goal is to generate or fix tests, 'no tests collected' is a failure
+        intent = val_input.plan.get("intent", "")
+        is_test_intent = intent in ["generate_tests", "fix_tests"]
+        if is_test_intent and code == 5:
+            return ValidationResult(
+                passed=False, 
+                stage_reached="tests", 
+                errors=["No tests were collected by pytest."], 
+                fix_signal="Pytest failed to collect any tests. Ensure your test files are named correctly (test_*.py) and classes/methods follow pytest conventions."
+            )
+
+        if code not in [0, 5]:  
             combined = f"{stdout}\n{stderr}".strip()
             return ValidationResult(passed=False, stage_reached="tests", errors=["Pytest failure"], raw_output=combined, fix_signal=f"Tests failed:\n{combined[-500:]}")
+
+        # --- STAGE 4: Completeness ---
+        # Ensure all files that SHOULD have been created/modified actually exist and are non-empty
+        app = val_input.plan.get("app", "")
+        target_files = []
+        if "model" in intent:
+            target_files = [f"{app}/models.py"]
+        elif "api" in intent:
+            target_files = [f"{app}/models.py", f"{app}/serializers.py", f"{app}/views.py", f"{app}/urls.py"]
+        elif "test" in intent:
+             # Basic check for at least one test file
+             if not any('test' in f for f in val_input.modified_files):
+                 return ValidationResult(passed=False, stage_reached="completeness", errors=["No test files were created/modified."], fix_signal="The plan was to generate tests, but no test files were found in the modifications.")
+
+        for rel_path in val_input.modified_files:
+            full_path = os.path.join(self.project_path, rel_path)
+            if os.path.exists(full_path):
+                size = os.path.getsize(full_path)
+                if size > 50000: # 50KB is huge for a generated file
+                    return ValidationResult(passed=False, stage_reached="completeness", errors=[f"File too large: {rel_path} ({size} bytes)"], fix_signal=f"The file {rel_path} is suspiciously large. This is likely due to an infinite generation loop. Please rewrite the file concisely.")
+                if size < 10: # Basically empty
+                    msg = f"Target file is empty: {rel_path}"
+                    return ValidationResult(passed=False, stage_reached="completeness", errors=[msg], fix_signal=f"The file {rel_path} is empty. Please provide the actual implementation.")
 
         return ValidationResult(passed=True, stage_reached="all", errors=[], raw_output=stdout)
 

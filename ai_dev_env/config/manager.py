@@ -20,7 +20,7 @@ class ADEConfig(BaseModel):
 
     # Hardware Limits
     num_parallel: int   = int(os.getenv("OLLAMA_NUM_PARALLEL",   "1"))
-    context_length: int = int(os.getenv("OLLAMA_CONTEXT_LENGTH", "8192"))
-    gpu_layers: int     = int(os.getenv("ADE_GPU_LAYERS",        "99"))   # 99 = full offload
+    context_length: int = int(os.getenv("OLLAMA_CONTEXT_LENGTH", "4096"))
+    gpu_layers: int     = int(os.getenv("ADE_GPU_LAYERS",        "0"))    # CPU-ONLY to prevent OOM
 
 config = ADEConfig()

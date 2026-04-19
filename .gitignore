@@ -7,6 +7,12 @@ ai_dev_env/config/env.sh
 *.env
 
 # =========================
+# Trackers and Logs
+# =========================
+ai_dev_env/memory/sessions/
+ade_dump.txt
+
+# =========================
 # PYTHON
 # =========================
 __pycache__/

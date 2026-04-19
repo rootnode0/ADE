@@ -101,19 +101,25 @@ ADE will formulate a plan, write the code, register the new apps, and output a v
 
 ## 5. Running Tests
 
-ADE enforces a centralized testing architecture. Test files are safely isolated inside `projects/<project_name>/tests/<app_name>/`.
+ADE enforces a **Zero Assumptions** testing architecture. This means:
+- **Self-Contained Fixtures**: Every test file using `api_client` defines its own fixture or uses a local `conftest.py`.
+- **Dynamic Data**: Tests NEVER assume existing DB state. They create their own data and use dynamic IDs.
+- **Automated Configuration**: ADE automatically generates a project-local `pytest.ini` with the correct `DJANGO_SETTINGS_MODULE`, so you can run tests anywhere.
 
 ### Manual Test Execution
-ADE installs and manages PyTest alongside the Django test runner.
+ADE manages PyTest alongside the Django test runner.
 
 ```bash
 cd projects/demo_api
-source .venv/bin/activate
-python -m pytest tests/ -v
+./.venv/bin/python -m pytest tests/ -v
 ```
 
 ### Auto Test Execution by ADE
-Whenever you use `runai`, ADE automatically runs the tests inside the containerized `.venv`. If an error occurs, the validation loop prevents saving broken states, safely rolling back to the latest Git commit if all retries fail.
+Whenever you use `runai`, ADE runs the tests inside the containerized `.venv`. 
+
+**Stability Features:**
+- **Robust Rollbacks**: If any step fails (coding, migration, or testing), ADE performs a `git reset --hard` and `git clean -fd` to restore the project to a 100% clean state.
+- **Environment Awareness**: ADE dynamically injects environment variables into the execution pipeline, preventing `ImproperlyConfigured` errors.
 
 ---
 

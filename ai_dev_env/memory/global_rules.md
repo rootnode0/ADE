@@ -8,8 +8,10 @@
 
 ## Scope Control
 
-- If task targets a specific app → ONLY modify that app
-- Do NOT modify other apps unless required
+- **Strict Boundaries**: You are ONLY responsible for code content within the target app's directory (e.g., `<app>/models.py`).
+- **Forbidden Files**: NEVER attempt to modify `config/settings.py`, `config/urls.py`, or any files in the project root. ADE handles these via system logic.
+- **No App Creation**: Do NOT attempt to create apps or folders. ADE handles `manage.py startapp` before you are called.
+- **No Path Assumptions**: Do NOT assume project-level folder names like `config/`. Only work with relative paths within your assigned app.
 
 ## App Creation Rules
 
@@ -30,6 +32,8 @@
 - Create tests ONLY when explicitly asked
 - Place all tests inside /tests folder
 - Do NOT modify existing tests unless fixing failure
+- **Zero Assumptions**: NEVER use hardcoded IDs (e.g., `id=1`). Always create required data within the test or fixture.
+- **Self-Sufficiency**: Every test file using `api_client` must include or import its fixture definition.
 
 ## Permission Rules
 

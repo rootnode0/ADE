@@ -10,8 +10,8 @@ next retry attempt.
 """
 import os
 import re
-import requests
 from ai_dev_env.config.manager import config
+from ai_dev_env.utils import ollama_client
 
 
 class Debugger:
@@ -56,23 +56,14 @@ AVOID: [what NOT to do on the next attempt]
 Be brief and precise. No preamble. No markdown. No explanations beyond the format above.
 """
         try:
-            resp = requests.post(
-                self.url,
-                json={
-                    "model": self.model,
-                    "prompt": prompt,
-                    "stream": False,
-                    "options": {
-                        "temperature": 0.0,
-                        "num_ctx": 4096,
-                    },
-                },
-                timeout=60,
+            raw = ollama_client.generate(
+                model=self.model,
+                prompt=prompt,
+                options={
+                    "temperature": 0.0,
+                    "num_ctx": 4096,
+                }
             )
-            resp.raise_for_status()
-            raw = resp.json().get("response", "")
-            # Strip <think> blocks from reasoning models
-            raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
             return raw if raw else f"[Debugger: no analysis generated]\nRaw error: {fix_signal[:300]}"
         except Exception as e:
             # Debugger failure is non-fatal — return the raw fix signal as fallback
